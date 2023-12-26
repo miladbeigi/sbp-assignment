@@ -39,18 +39,17 @@ jobs:
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/sbp-assignment-staging:${{ github.sha }}
 
-      - name: Deploy to App Runner
+      - name: Deploy to App Runner Image
         id: deploy-apprunner
         uses: awslabs/amazon-app-runner-deploy@main
         with:
-          service: app-runner-image-deploy-service
-          image: ${{ steps.build-image.outputs.image }}
+          service: app-runner-git-deploy-service
+          image: ${{ steps.login-ecr.outputs.registry }}/sbp-assignment-staging:${{ github.sha }}
           access-role-arn: arn:aws:iam::392017163980:role/app-runner-service-role
-          runtime: NODEJS_12
-          region: ${{ secrets.AWS_REGION }}
+          region: eu-west-1
           cpu: 1
           memory: 2
-          port: 3000
+          wait-for-service-stability-seconds: 1200
 
       - name: App Runner output
         run: echo "App runner output ${{ steps.deploy-apprunner.outputs.service-id }}"
