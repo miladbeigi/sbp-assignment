@@ -1,3 +1,10 @@
+## v0.3.0 (2023-12-26)
+
+### Feat
+
+- **infra**: add terraform state module, update oidc
+- **ci**: update workflows, add pull request workflow
+
 ## v0.2.0 (2023-12-26)
 
 ### Refactor
