@@ -8,7 +8,7 @@ The application is a basic react application that is built using `create-react-a
 
 ## Infra
 
-The infrastructure is written in Terraform and only the plan and formatting steps are run in GitHub Actions.
+The infrastructure is written in Terraform and only the plan and formatting steps are run in GitHub Actions. If you plan to run this locally, you will need to put variables in the `terraform.tfvars` file. The variables needed are listed in the `variables.tf` file. The AWS credentials are also needed to run Terraform locally. Make sure the credentials are exported as environment variables.
 
 ### Modules
 

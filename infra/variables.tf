@@ -1,5 +1,10 @@
-variable "name" {
+variable "vpc-name" {
   description = "The name of the VPC"
+  type        = string
+}
+
+variable "env" {
+  description = "The environment name"
   type        = string
 }
 

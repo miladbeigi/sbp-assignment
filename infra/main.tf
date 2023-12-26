@@ -1,6 +1,6 @@
 module "network" {
   source               = "./modules/core-network"
-  name                 = var.name
+  name                 = var.vpc-name
   vpc-cidr             = var.vpc-cidr
   region               = var.region
   private-subnets-cidr = var.private-subnets-cidr
@@ -10,7 +10,7 @@ module "network" {
 
 module "terraform-state" {
   source                     = "./modules/terraform-state/"
-  env                        = "staging"
+  env                        = var.env
   bucket_name                = var.terraform-state-bucket
   dynamodb-prefix-table-name = "app"
 }
@@ -26,7 +26,7 @@ module "s3-event-sns" {
 
 module "iam-oidc" {
   source      = "./modules/iam-oidc/"
-  environment = "staging"
+  environment = var.env
 
   oidc_provider_url       = "https://token.actions.githubusercontent.com"
   oidc_provider_audiences = ["sts.amazonaws.com"]
