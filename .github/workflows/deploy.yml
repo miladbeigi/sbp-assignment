@@ -57,7 +57,7 @@ jobs:
           context: app
           file: app/Dockerfile
           push: false
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ inputs.version }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:latest
 
       - name: Build and Push
         if: ${{ inputs.deploy }} == 'true'
