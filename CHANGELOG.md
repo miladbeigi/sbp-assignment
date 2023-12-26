@@ -1,3 +1,12 @@
+## v0.3.1 (2023-12-26)
+
+### Fix
+
+- **ci**: update tags and if conditions
+- **ci**: fix image version
+- **ci**: update steps to check action run
+- **ci**: update steps
+
 ## v0.3.0 (2023-12-26)
 
 ### Feat
