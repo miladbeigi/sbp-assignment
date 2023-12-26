@@ -38,3 +38,19 @@ jobs:
           file: app/Dockerfile
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/sbp-assignment-staging:${{ github.ref_name }}
+
+      - name: Deploy to App Runner
+        id: deploy-apprunner
+        uses: awslabs/amazon-app-runner-deploy@main
+        with:
+          service: app-runner-image-deploy-service
+          image: ${{ steps.build-image.outputs.image }}
+          access-role-arn: arn:aws:iam::392017163980:role/app-runner-service-role
+          runtime: NODEJS_12
+          region: ${{ secrets.AWS_REGION }}
+          cpu: 1
+          memory: 2
+          port: 3000
+
+      - name: App Runner output
+        run: echo "App runner output ${{ steps.deploy-apprunner.outputs.service-id }}"
