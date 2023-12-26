@@ -20,6 +20,9 @@ on:
       ecr-repo:
         required: true
         type: string
+      deploy:
+        required: true
+        type: boolean
 
 permissions:
   id-token: write
@@ -27,7 +30,7 @@ permissions:
 
 jobs:
   build:
-    name: Build
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,10 +56,11 @@ jobs:
         with:
           context: app
           file: app/Dockerfile
-          push: true
+          push: ${{ inputs.deploy }}}
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ inputs.version }}
 
       - name: Deploy to App Runner Image
+        if: ${{ inputs.deploy == 'true' }}
         id: deploy-apprunner
         uses: awslabs/amazon-app-runner-deploy@main
         with:
@@ -69,4 +73,5 @@ jobs:
           wait-for-service-stability-seconds: 1200
 
       - name: App Runner URL
+        if: ${{ inputs.deploy == 'true' }}
         run: echo "App runner URL ${{ steps.deploy-apprunner.outputs.service-url }}"

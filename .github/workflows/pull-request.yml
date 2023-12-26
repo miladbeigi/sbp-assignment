@@ -1,14 +1,24 @@
-name: Deploy
+name: Plan
 on:
-  push:
-    tags:
-      - "v*"
+  pull_request:
+    branches:
+      - main
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
+  check-infra-changes:
+    name: Infra
+    uses: ./.github/workflows/plan.yml
+    secrets: inherit
+    with:
+      working-directory: "infra"
+      role-to-assume: "arn:aws:iam::392017163980:role/core-infra-role-staging"
+      role-session-name: "core-infra-role-staging"
+      aws-region: "eu-west-1"
+
   call-deploy:
     name: Staging
     uses: ./.github/workflows/deploy.yml
@@ -20,4 +30,4 @@ jobs:
       aws-region: "eu-west-1"
       apprunner-service-role: "arn:aws:iam::392017163980:role/app-runner-service-role"
       ecr-repo: "sbp-assignment-staging"
-      deploy: true
+      deploy: false
