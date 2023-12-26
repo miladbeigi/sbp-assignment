@@ -8,12 +8,12 @@ module "network" {
   enbable-nat-gateway  = var.enbable-nat-gateway
 }
 
-module "s3-event-sns" {
-  source      = "./modules/s3-event-sns"
-  bucket-name = var.bucket-name
-  topic-name  = var.topic-name
-  email       = var.email
-}
+# module "s3-event-sns" {
+#   source      = "./modules/s3-event-sns"
+#   bucket-name = var.bucket-name
+#   topic-name  = var.topic-name
+#   email       = var.email
+# }
 
 module "iam-oidc" {
   source      = "./modules/iam-oidc/"
