@@ -23,3 +23,5 @@ plan.out
 
 # Ignore Terraform modules downloaded as part of a Terraform init
 .terraform/modules/
+
+.vscode
