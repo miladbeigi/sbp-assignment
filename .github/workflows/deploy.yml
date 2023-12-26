@@ -22,7 +22,7 @@ on:
         type: string
       deploy:
         required: true
-        type: boolean
+        type: string
 
 permissions:
   id-token: write
@@ -50,13 +50,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push
-        id: docker_build
+      - name: Build and Push
         uses: docker/build-push-action@v4
         with:
           context: app
           file: app/Dockerfile
-          push: ${{ inputs.deploy }}}
+          push: ${{ inputs.deploy }}
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ inputs.version }}
 
       - name: Deploy to App Runner Image
