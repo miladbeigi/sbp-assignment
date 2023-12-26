@@ -50,13 +50,22 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push
-        id: docker_build
+      - name: Build
+        if: ${{ inputs.deploy == 'false' }}
         uses: docker/build-push-action@v4
         with:
           context: app
           file: app/Dockerfile
-          push: ${{ inputs.deploy }}}
+          push: false
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ inputs.version }}
+
+      - name: Build and Push
+        if: ${{ inputs.deploy == 'true' }}
+        uses: docker/build-push-action@v4
+        with:
+          context: app
+          file: app/Dockerfile
+          push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ inputs.version }}
 
       - name: Deploy to App Runner Image
