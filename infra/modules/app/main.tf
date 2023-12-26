@@ -17,7 +17,7 @@ EOF
 }
 
 data "aws_iam_policy" "AWSAppRunnerServicePolicyForECRAccess" {
-  arn = "arn:aws:iam::aws:policy/AWSAppRunnerServicePolicyForECRAccess"
+  arn = "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "this" {

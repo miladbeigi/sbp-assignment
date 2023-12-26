@@ -51,5 +51,5 @@ jobs:
           memory: 2
           wait-for-service-stability-seconds: 1200
 
-      - name: App Runner output
-        run: echo "App runner output ${{ steps.deploy-apprunner.outputs.service-id }}"
+      - name: App Runner URL
+        run: echo "App runner URL ${{ steps.deploy-apprunner.outputs.service-url }}"
