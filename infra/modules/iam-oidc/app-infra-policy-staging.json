@@ -40,8 +40,6 @@
       "Effect": "Allow",
       "Action": ["s3:*"],
       "Resource": [
-        "arn:aws:s3:::${code-pipeline-bucket-name}",
-        "arn:aws:s3:::${code-pipeline-bucket-name}/*",
         "arn:aws:s3:::${terraform-state-bucket-name}",
         "arn:aws:s3:::${terraform-state-bucket-name}/*"
       ]

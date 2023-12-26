@@ -47,3 +47,12 @@ variable "email" {
   description = "The email address to subscribe to the SNS topic"
   type        = string
 }
+
+variable "ecr_name" {
+  type        = string
+  description = "The name of the ECR repository"
+}
+
+variable "terraform-state-bucket" {
+  description = "S3 bucket name for storing terraform state"
+}

@@ -8,12 +8,21 @@ module "network" {
   enbable-nat-gateway  = var.enbable-nat-gateway
 }
 
-# module "s3-event-sns" {
-#   source      = "./modules/s3-event-sns"
-#   bucket-name = var.bucket-name
-#   topic-name  = var.topic-name
-#   email       = var.email
-# }
+module "terraform-state" {
+  source                     = "./modules/terraform-state/"
+  env                        = "staging"
+  bucket_name                = var.terraform-state-bucket
+  dynamodb-prefix-table-name = "app"
+}
+
+
+module "s3-event-sns" {
+  source      = "./modules/s3-event-sns"
+  bucket-name = var.bucket-name
+  topic-name  = var.topic-name
+  email       = var.email
+}
+
 
 module "iam-oidc" {
   source      = "./modules/iam-oidc/"
@@ -30,12 +39,11 @@ module "iam-oidc" {
     "miladbeigi/sbp-assignment:*"
   ]
 
-  terraform-state-bucket-name         = "terraform-state-staging"
-  code-pipeline-bucket-name           = "code-pipeline-artifacts-staging"
-  terraform-state-dynamodb-table-name = "cms-terraform-state-db-sanbox"
+  terraform-state-bucket-name         = module.terraform-state.terraform_state_bucket
+  terraform-state-dynamodb-table-name = module.terraform-state.dynamodb_table
 }
 
 module "app" {
   source   = "./modules/app"
-  ecr_name = "sbp-assignment-staging"
+  ecr_name = var.ecr_name
 }
