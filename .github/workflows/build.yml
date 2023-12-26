@@ -16,4 +16,4 @@ jobs:
     with:
       role-arn: "arn:aws:iam::392017163980:role/app-infra-role-staging"
       role-session-name: "oidc-access-staging"
-      region: "eu-west-1"
+      aws-region: "eu-west-1"
