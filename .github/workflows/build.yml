@@ -14,14 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: OIDC
-        uses: ./.github/workflows/oidc.yml
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-arn: "arn:aws:iam::392017163980:role/core-infra-role-staging"
+          role-to-assume: "arn:aws:iam::392017163980:role/core-infra-role-staging"
           role-session-name: "oidc-access-staging"
           aws-region: "eu-west-1"
+
+      - name: Check AWS Access
+        run: aws sts get-caller-identity
 
       - name: Login to Amazon ECR
         id: login-ecr
