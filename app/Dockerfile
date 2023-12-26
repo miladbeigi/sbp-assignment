@@ -1,20 +1,12 @@
-# ---- Base Node ----
-FROM node:18-alpine AS base
+FROM node:18-alpine
+
 WORKDIR /app
-COPY package*.json ./
 
-# ---- Dependencies ----
-FROM base AS dependencies
-RUN npm ci --only=production
+COPY package.json package-lock.json ./
 
-# ---- Build ----
-FROM dependencies AS build
-COPY . .
-RUN npm run build
+RUN  npm ci --log-level=verbose --only=production
 
-# ---- Release ----
-FROM node:18-alpine AS release
-WORKDIR /app
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=build /app/build ./build
+COPY public  /app/public
+COPY src  /app/src
+
 CMD ["npm", "start"]

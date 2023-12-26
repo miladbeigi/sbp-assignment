@@ -1,8 +1,25 @@
-name: Apply
+name: Deploy
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      aws-oidc-role:
+        required: true
+        type: string
+      aws-region:
+        required: true
+        type: string
+      apprunner-service-role:
+        required: true
+        type: string
+      ecr-repo:
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -19,9 +36,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: "arn:aws:iam::392017163980:role/core-infra-role-staging"
+          role-to-assume: ${{ inputs.aws-oidc-role }}
           role-session-name: "oidc-access-staging"
-          aws-region: "eu-west-1"
+          aws-region: ${{ inputs.aws-region }}
 
       - name: Check AWS Access
         run: aws sts get-caller-identity
@@ -37,16 +54,16 @@ jobs:
           context: app
           file: app/Dockerfile
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/sbp-assignment-staging:${{ github.sha }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ inputs.version }}
 
       - name: Deploy to App Runner Image
         id: deploy-apprunner
         uses: awslabs/amazon-app-runner-deploy@main
         with:
           service: app-runner-git-deploy-service
-          image: ${{ steps.login-ecr.outputs.registry }}/sbp-assignment-staging:${{ github.sha }}
-          access-role-arn: arn:aws:iam::392017163980:role/app-runner-service-role
-          region: eu-west-1
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ inputs.version }}
+          access-role-arn: ${{ inputs.apprunner-service-role }}
+          region: ${{ inputs.aws-region }}
           cpu: 1
           memory: 2
           wait-for-service-stability-seconds: 1200
