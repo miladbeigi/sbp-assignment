@@ -22,7 +22,7 @@ on:
         type: string
       deploy:
         required: true
-        type: boolean
+        type: string
 
 permissions:
   id-token: write
@@ -50,26 +50,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build
-        if: ${{ inputs.deploy }} == 'false'
-        uses: docker/build-push-action@v4
-        with:
-          context: app
-          file: app/Dockerfile
-          push: false
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:latest
-
       - name: Build and Push
-        if: ${{ inputs.deploy }} == 'true'
         uses: docker/build-push-action@v4
         with:
           context: app
           file: app/Dockerfile
-          push: true
+          push: ${{ inputs.deploy }}
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ inputs.version }}
 
       - name: Deploy to App Runner Image
-        if: ${{ inputs.deploy }} == 'true'
+        if: ${{ inputs.deploy == 'true' }}
         id: deploy-apprunner
         uses: awslabs/amazon-app-runner-deploy@main
         with:
@@ -82,5 +72,5 @@ jobs:
           wait-for-service-stability-seconds: 1200
 
       - name: App Runner URL
-        if: ${{ inputs.deploy }} == 'true'
+        if: ${{ inputs.deploy == 'true' }}
         run: echo "App runner URL ${{ steps.deploy-apprunner.outputs.service-url }}"

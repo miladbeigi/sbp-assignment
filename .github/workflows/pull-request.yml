@@ -25,7 +25,7 @@ jobs:
     secrets: inherit
     with:
       environment: staging
-      version: ${{ github.ref_name }}
+      version: latest
       aws-oidc-role: "arn:aws:iam::392017163980:role/core-infra-role-staging"
       aws-region: "eu-west-1"
       apprunner-service-role: "arn:aws:iam::392017163980:role/app-runner-service-role"
