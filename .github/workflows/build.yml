@@ -9,11 +9,29 @@ permissions:
   contents: read
 
 jobs:
-  call-oidc-staging:
-    name: OIDC
-    uses: ./.github/workflows/oidc.yml
-    secrets: inherit
-    with:
-      role-arn: "arn:aws:iam::392017163980:role/core-infra-role-staging"
-      role-session-name: "oidc-access-staging"
-      aws-region: "eu-west-1"
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: OIDC
+        uses: ./.github/workflows/oidc.yml
+        with:
+          role-arn: "arn:aws:iam::392017163980:role/core-infra-role-staging"
+          role-session-name: "oidc-access-staging"
+          aws-region: "eu-west-1"
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: app/Dockerfile
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/sbp-assignment-staging:${{ github.ref_name }}

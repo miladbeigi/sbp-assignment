@@ -34,3 +34,8 @@ module "iam-oidc" {
   code-pipeline-bucket-name           = "code-pipeline-artifacts-staging"
   terraform-state-dynamodb-table-name = "cms-terraform-state-db-sanbox"
 }
+
+module "app" {
+  source   = "./modules/app"
+  ecr_name = "sbp-assignment-staging"
+}
