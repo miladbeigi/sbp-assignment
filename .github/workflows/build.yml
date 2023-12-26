@@ -1,0 +1,19 @@
+name: Apply
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  call-oidc-staging:
+    name: OIDC
+    uses: ./.github/workflows/oidc.yml
+    secrets: inherit
+    with:
+      role-arn: "arn:aws:iam::392017163980:role/app-infra-role-staging"
+      role-session-name: "oidc-access-staging"
+      region: "eu-west-1"
