@@ -14,6 +14,6 @@ jobs:
     uses: ./.github/workflows/oidc.yml
     secrets: inherit
     with:
-      role-arn: "arn:aws:iam::392017163980:role/app-infra-role-staging"
+      role-arn: "arn:aws:iam::392017163980:role/core-infra-role-staging"
       role-session-name: "oidc-access-staging"
       aws-region: "eu-west-1"
